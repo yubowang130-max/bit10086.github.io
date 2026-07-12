@@ -7,12 +7,191 @@ import "@fontsource/spline-sans/500.css";
 import "@fontsource/spline-sans/600.css";
 import "./style.css";
 
+type Language = "en" | "zh";
+
+const translations: Record<Language, Record<string, string>> = {
+  en: {
+    skip: "Skip to content",
+    menu: "Menu",
+    navAbout: "About",
+    navResearch: "Research",
+    navPublications: "Publications",
+    navContact: "Contact",
+    heroStatus: "Beijing → Singapore · 2026",
+    heroTitle: "Hello—<br />I’m Yubo.",
+    heroIntro: "I build intelligent systems that connect <em>knowledge, spatial worlds, and physical action</em>.",
+    heroContext: "Incoming M.Sc. student at NTU · B.Eng. in Automation at BIT",
+    heroResearch: "Explore my research",
+    heroContact: "Start a conversation",
+    identityFocus: "AI agents / 3D worlds<br />Control systems",
+    interestAgents: "Scientific agents",
+    interest3d: "Generative 3D",
+    interestControl: "Control systems",
+    interestEmbodied: "Embodied intelligence",
+    aboutLabel: "About",
+    aboutLead: "I’m completing a B.Eng. in Automation at Beijing Institute of Technology and will begin an M.Sc. in <em>Computer Control and Automation</em> at Nanyang Technological University.",
+    aboutBody: "My work moves between scientific AI agents, generated 3D environments, and control. I care about the point where a convincing model becomes a system that can make useful decisions under real constraints.",
+    collabLabel: "Looking to connect",
+    collabBody: "I welcome conversations with researchers and builders working on agents, world models, simulation, and autonomous systems.",
+    ntuName: "Nanyang Technological University",
+    ntuDegree: "M.Sc. · Computer Control & Automation",
+    anuName: "Australian National University",
+    anuDegree: "Exchange · AI & Control",
+    bitName: "Beijing Institute of Technology",
+    bitDegree: "B.Eng. · Automation",
+    researchLabel: "Selected research",
+    researchIntro: "Four projects trace the question I keep returning to: how can intelligent systems turn representations into reliable action?",
+    researchMeta: "2024—present · Selected work",
+    scientifyDate: "2026—present",
+    scientifyTitle: "Scientify: autonomous scientific discovery agents",
+    scientifyBody: "Co-developed an LLM-agent framework that learns from evolving literature and generates research hypotheses. I built API orchestration, figure-digitisation skills, and local inference workflows for large-scale ablations.",
+    readPaper: "Read the paper",
+    thesisTitle: "Generative 3D scenes for UAV reinforcement learning",
+    thesisBody: "Built an end-to-end pipeline for simulator-ready environments: generated scenes and assets, estimated support surfaces, checked collisions, and composed 3D Gaussian Splatting worlds for a downstream UAV RL loop.",
+    undergradThesis: "Undergraduate thesis",
+    marsTitle: "Mars landing-site selection with LLM reasoning",
+    marsBody: "Combined Martian terrain layers with structured LLM reasoning to rank landing sites by safety and scientific value, turning geospatial evidence into an inspectable decision pipeline.",
+    viewCode: "View code",
+    radarTitle: "Radar emitter recognition with DBSCAN + Transformer",
+    radarBody: "Designed a two-stage pipeline for clustering pulse streams and classifying emitter types. It reached 89% accuracy, a 12-point absolute improvement over the CNN baseline on the same dataset.",
+    researchProject: "Research project",
+    questionsLabel: "Questions I’m exploring",
+    questionA: "Can software keep learning from a changing body of knowledge?",
+    questionABody: "Research agents, evolving literature, memory, and the gap between retrieval and reasoning.",
+    questionB: "When does a generated world become useful rather than merely convincing?",
+    questionBBody: "3D representations, simulation, spatial constraints, and environments for autonomous systems.",
+    questionC: "How should learned systems meet classical control?",
+    questionCBody: "Perception and decision-making that eventually have to survive sensors, noise, and physics.",
+    publicationsLabel: "Publications",
+    firstAuthor: "First author",
+    contactLabel: "Contact & links",
+    contactIntro: "If our interests overlap, I’d be glad to compare notes, explore a research idea, or contribute to an ambitious prototype.",
+    contactNote: "Open to research collaboration and lab opportunities",
+    codeLabel: "Code",
+    codeNote: "Open-source experiments and project work",
+    emailLabel: "Email",
+    emailNote: "The best way to reach me",
+    cvTitle: "Curriculum vitae",
+    cvNote: "Available by email · personal details protected",
+    footerPrompt: "Have a question worth exploring?",
+    footerCta: "Let’s talk",
+    footerBuild: "Designed & built between Beijing and Singapore",
+    backTop: "Back to top ↑",
+  },
+  zh: {
+    skip: "跳至主要内容",
+    menu: "菜单",
+    navAbout: "关于我",
+    navResearch: "研究项目",
+    navPublications: "论文发表",
+    navContact: "联系",
+    heroStatus: "北京 → 新加坡 · 2026",
+    heroTitle: "你好—<br />我是宇博。",
+    heroIntro: "我构建连接<em>知识、空间世界与物理行动</em>的智能系统。",
+    heroContext: "南洋理工大学硕士新生 · 北京理工大学自动化学士",
+    heroResearch: "查看研究项目",
+    heroContact: "与我交流",
+    identityFocus: "智能体 / 三维世界<br />控制系统",
+    interestAgents: "科学智能体",
+    interest3d: "生成式三维",
+    interestControl: "控制系统",
+    interestEmbodied: "具身智能",
+    aboutLabel: "关于我",
+    aboutLead: "我即将完成北京理工大学自动化专业学士学位，并将在南洋理工大学攻读<em>计算机控制与自动化</em>硕士。",
+    aboutBody: "我的工作横跨科学智能体、生成式三维环境与控制。我更关注这样一个交汇点：如何让看起来可信的模型，真正成为能够在现实约束下作出有效决策的系统。",
+    collabLabel: "期待交流",
+    collabBody: "欢迎从事智能体、世界模型、仿真与自主系统的研究者和开发者与我交流。",
+    ntuName: "南洋理工大学",
+    ntuDegree: "硕士 · 计算机控制与自动化",
+    anuName: "澳大利亚国立大学",
+    anuDegree: "交换生 · 人工智能与控制",
+    bitName: "北京理工大学",
+    bitDegree: "学士 · 自动化",
+    researchLabel: "代表性研究",
+    researchIntro: "这四项工作围绕着一个持续吸引我的问题：智能系统如何将表征转化为可靠的行动？",
+    researchMeta: "2024—至今 · 精选工作",
+    scientifyDate: "2026—至今",
+    scientifyTitle: "Scientify：自主科学发现智能体",
+    scientifyBody: "共同开发从持续演化的文献中学习并生成科研假设的 LLM 智能体框架。我负责 API 编排、图表数字化技能，以及面向大规模消融实验的本地推理流程。",
+    readPaper: "阅读论文",
+    thesisTitle: "面向无人机强化学习的生成式三维场景",
+    thesisBody: "构建可直接用于仿真的端到端环境生成管线：生成场景与资产、估计支撑平面、检测碰撞，并组合三维高斯泼溅世界，供下游无人机强化学习使用。",
+    undergradThesis: "本科毕业设计",
+    marsTitle: "基于大模型推理的火星着陆区优选",
+    marsBody: "将火星地形数据与结构化大模型推理结合，依据安全性和科学价值对候选着陆区排序，把地理空间证据转化为可检查的决策流程。",
+    viewCode: "查看代码",
+    radarTitle: "DBSCAN + Transformer 雷达辐射源识别",
+    radarBody: "设计两阶段流程，对脉冲流进行聚类并识别辐射源类型。在相同数据集上达到 89% 准确率，较 CNN 基线绝对提升 12 个百分点。",
+    researchProject: "研究项目",
+    questionsLabel: "我正在探索的问题",
+    questionA: "软件能否从持续变化的知识体系中不断学习？",
+    questionABody: "科研智能体、动态文献、记忆，以及检索与推理之间的鸿沟。",
+    questionB: "生成的世界何时不只是逼真，而是真正有用？",
+    questionBBody: "三维表征、仿真、空间约束，以及面向自主系统的训练环境。",
+    questionC: "学习系统应该如何与经典控制结合？",
+    questionCBody: "最终必须经受传感器、噪声与物理规律考验的感知和决策系统。",
+    publicationsLabel: "论文发表",
+    firstAuthor: "第一作者",
+    contactLabel: "联系与链接",
+    contactIntro: "如果我们的兴趣有所交集，我很乐意交流研究思路、共同探索问题，或参与一个有挑战性的原型项目。",
+    contactNote: "欢迎科研合作与实验室机会",
+    codeLabel: "代码",
+    codeNote: "开源实验与项目记录",
+    emailLabel: "邮箱",
+    emailNote: "联系我的最佳方式",
+    cvTitle: "个人简历",
+    cvNote: "可通过邮件索取 · 已保护个人信息",
+    footerPrompt: "有一个值得探索的问题？",
+    footerCta: "聊一聊",
+    footerBuild: "设计与开发于北京和新加坡之间",
+    backTop: "返回顶部 ↑",
+  },
+};
+
 const root = document.documentElement;
 const menuButton = document.querySelector<HTMLButtonElement>(".menu-toggle");
 const nav = document.querySelector<HTMLElement>(".site-nav");
 const progressBar = document.querySelector<HTMLElement>(".progress span");
 const revealItems = document.querySelectorAll<HTMLElement>(".reveal");
 const identityCard = document.querySelector<HTMLElement>(".identity-card");
+const languageButton = document.querySelector<HTMLButtonElement>(".language-toggle");
+
+const setLanguage = (language: Language) => {
+  const copy = translations[language];
+  root.lang = language === "zh" ? "zh-CN" : "en";
+  root.dataset.language = language;
+
+  document.querySelectorAll<HTMLElement>("[data-i18n]").forEach((element) => {
+    const key = element.dataset.i18n;
+    if (key && copy[key]) element.textContent = copy[key];
+  });
+
+  document.querySelectorAll<HTMLElement>("[data-i18n-html]").forEach((element) => {
+    const key = element.dataset.i18nHtml;
+    if (key && copy[key]) element.innerHTML = copy[key];
+  });
+
+  const isChinese = language === "zh";
+  document.title = isChinese ? "王宇博 — 研究与项目" : "Yubo Wang — Research & Projects";
+  document.querySelector<HTMLMetaElement>('meta[name="description"]')?.setAttribute(
+    "content",
+    isChinese
+      ? "王宇博的学术主页，研究方向包括科学智能体、生成式三维环境、控制与具身智能系统。"
+      : "Yubo Wang works across scientific agents, generative 3D environments, control, and embodied intelligent systems.",
+  );
+  languageButton?.setAttribute("aria-label", isChinese ? "Switch to English" : "切换为中文");
+  languageButton?.setAttribute("title", isChinese ? "Switch to English" : "切换为中文");
+  localStorage.setItem("language", language);
+};
+
+const storedLanguage = localStorage.getItem("language");
+const initialLanguage: Language = storedLanguage === "zh" ? "zh" : "en";
+setLanguage(initialLanguage);
+
+languageButton?.addEventListener("click", () => {
+  setLanguage(root.dataset.language === "zh" ? "en" : "zh");
+  closeMenu();
+});
 
 const closeMenu = () => {
   menuButton?.setAttribute("aria-expanded", "false");
