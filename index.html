@@ -27,6 +27,7 @@
         "name": "Yubo Wang",
         "alternateName": "王宇博",
         "url": "https://bit10086.me",
+        "email": "mailto:YUBO004@e.ntu.edu.sg",
         "sameAs": ["https://github.com/bit10086"],
         "affiliation": [
           { "@type": "CollegeOrUniversity", "name": "Beijing Institute of Technology" },
@@ -45,8 +46,9 @@
     <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
     <div class="progress" aria-hidden="true"><span></span></div>
 
-    <header class="site-header page-shell">
-      <a class="wordmark" href="#top" aria-label="Yubo Wang, back to top">
+    <header class="site-header">
+      <div class="site-header-inner page-shell">
+      <a class="wordmark" href="#top" aria-label="Yubo Wang, back to top" data-i18n-aria-label="wordmarkLabel">
         <span class="wordmark-mark" aria-hidden="true">B/</span>
         <span class="wordmark-name">Yubo Wang</span>
       </a>
@@ -55,15 +57,16 @@
         <span data-i18n="menu">Menu</span><i aria-hidden="true"></i>
       </button>
 
-      <nav id="site-nav" class="site-nav" aria-label="Main navigation">
-        <a href="#about" data-i18n="navAbout">About</a>
+      <nav id="site-nav" class="site-nav" aria-label="Main navigation" data-i18n-aria-label="navLabel">
         <a href="#research" data-i18n="navResearch">Research</a>
         <a href="#publications" data-i18n="navPublications">Publications</a>
+        <a href="#about" data-i18n="navAbout">About</a>
         <a href="#contact" data-i18n="navContact">Contact</a>
         <button class="language-toggle" type="button" aria-label="切换为中文" title="切换为中文">
-          <span aria-hidden="true">中</span><i aria-hidden="true"></i><span aria-hidden="true">EN</span>
+          <span aria-hidden="true">中文</span><i aria-hidden="true"></i><span aria-hidden="true">EN</span>
         </button>
       </nav>
+      </div>
     </header>
 
     <main id="main">
@@ -77,13 +80,18 @@
           <p class="hero-context reveal" data-i18n="heroContext">
             Incoming M.Sc. student at NTU · B.Eng. in Automation at BIT
           </p>
-          <div class="hero-links reveal">
+          <div class="hero-proof reveal" aria-label="Academic highlights" data-i18n-aria-label="proofLabel">
+            <span><strong>ICML 2026</strong><small data-i18n="proofWorkshop">AI4Research Workshop</small></span>
+            <span><strong>03</strong><small data-i18n="proofPublications">Publications</small></span>
+            <span><strong>2026</strong><small data-i18n="proofNtu">NTU M.Sc.</small></span>
+          </div>
+          <div class="hero-links">
             <a href="#research"><span data-i18n="heroResearch">Explore my research</span><span>↓</span></a>
-            <a href="mailto:wyb040918@163.com"><span data-i18n="heroContact">Start a conversation</span><span>↗</span></a>
+            <a href="mailto:YUBO004@e.ntu.edu.sg"><span data-i18n="heroContact">Start a conversation</span><span>↗</span></a>
           </div>
         </div>
 
-        <aside class="identity-card reveal" aria-label="Identity mark for Yubo Wang">
+        <aside class="identity-card reveal" aria-label="Identity mark for Yubo Wang" data-i18n-aria-label="identityLabel">
           <div class="identity-topline"><span>Y.W / 10086</span><span>40.0°N · 116.3°E</span></div>
           <div class="identity-figure">
             <span class="orbit orbit-a" aria-hidden="true"></span>
@@ -98,7 +106,7 @@
           </div>
         </aside>
 
-        <div class="interest-line reveal" aria-label="Areas of interest">
+        <div class="interest-line reveal" aria-label="Areas of interest" data-i18n-aria-label="interestsLabel">
           <span data-i18n="interestAgents">Scientific agents</span>
           <span data-i18n="interest3d">Generative 3D</span>
           <span data-i18n="interestControl">Control systems</span>
@@ -106,9 +114,78 @@
         </div>
       </section>
 
-      <section id="about" class="about page-shell section-block">
+      <section id="research" class="research page-shell section-block">
         <header class="section-label reveal">
           <span>01</span>
+          <p data-i18n="researchLabel">Selected research</p>
+        </header>
+
+        <div class="research-intro reveal">
+          <p data-i18n="researchIntro">Four projects trace the question I keep returning to: how can intelligent systems turn representations into reliable action?</p>
+          <span data-i18n="researchMeta">2024—present · Selected work</span>
+        </div>
+
+        <div class="research-grid">
+          <article class="research-card research-card-featured reveal">
+            <div class="research-card-top"><span>01 / AGENTS</span><time data-i18n="scientifyDate">2026—present</time></div>
+            <h2 data-i18n="scientifyTitle">Scientify: autonomous scientific discovery agents</h2>
+            <p data-i18n="scientifyBody">Co-developed an LLM-agent framework that learns from evolving literature and generates research hypotheses. I built API orchestration, figure-digitisation skills, and local inference workflows for large-scale ablations.</p>
+            <p class="research-result" data-i18n="scientifyResult">Paper result · 72% of topics yielded validated hypotheses · 91% lower token cost</p>
+            <ul class="tag-list"><li>LLM agents</li><li>OpenClaw</li><li>Ollama</li><li>Research tooling</li></ul>
+            <a class="text-link" href="https://arxiv.org/abs/2604.12243" target="_blank" rel="noreferrer"><span data-i18n="readPaper">Read the paper</span> ↗</a>
+          </article>
+
+          <article class="research-card reveal">
+            <div class="research-card-top"><span>02 / 3D + RL</span><time>2026</time></div>
+            <h2 data-i18n="thesisTitle">Generative 3D scenes for UAV reinforcement learning</h2>
+            <p data-i18n="thesisBody">Built an end-to-end pipeline for simulator-ready environments: generated scenes and assets, estimated support surfaces, checked collisions, and composed 3D Gaussian Splatting worlds for a downstream UAV RL loop.</p>
+            <ul class="tag-list"><li>3DGS</li><li>World models</li><li>SAM 3D</li><li>Simulation</li></ul>
+            <span class="text-link text-link-muted" data-i18n="undergradThesis">Undergraduate thesis</span>
+          </article>
+
+          <article class="research-card reveal">
+            <div class="research-card-top"><span>03 / GEO AI</span><time>2024—25</time></div>
+            <h2 data-i18n="marsTitle">Mars landing-site selection from terrain constraints</h2>
+            <p data-i18n="marsBody">Built a geospatial pipeline that combines illumination and slope constraints to rank candidate landing zones, turning Martian DEM evidence into an inspectable selection workflow.</p>
+            <ul class="tag-list"><li>Terrain analysis</li><li>DEM</li><li>Geospatial</li><li>Open source</li></ul>
+            <a class="text-link" href="https://github.com/bit10086/mars-landing-site-selector" target="_blank" rel="noreferrer"><span data-i18n="viewCode">View code</span> ↗</a>
+          </article>
+
+          <article class="research-card reveal">
+            <div class="research-card-top"><span>04 / SIGNALS</span><time>2025</time></div>
+            <h2 data-i18n="radarTitle">Radar emitter recognition with DBSCAN + Transformer</h2>
+            <p data-i18n="radarBody">Designed a two-stage pipeline for clustering pulse streams and classifying emitter types. It reached 89% accuracy, a 12-point absolute improvement over the CNN baseline on the same dataset.</p>
+            <ul class="tag-list"><li>Transformer</li><li>DBSCAN</li><li>Signal analysis</li><li>89% accuracy</li></ul>
+            <span class="text-link text-link-muted" data-i18n="researchProject">Research project</span>
+          </article>
+        </div>
+      </section>
+
+      <section id="publications" class="publications page-shell section-block">
+        <header class="section-label reveal">
+          <span>02</span>
+          <p data-i18n="publicationsLabel">Publications</p>
+        </header>
+        <div class="publication-list">
+          <a class="publication-row reveal" href="https://arxiv.org/abs/2604.12243" target="_blank" rel="noreferrer">
+            <span class="publication-year">2026</span>
+            <div><h2>Continuous Knowledge Metabolism: Generating Scientific Hypotheses from Evolving Literature</h2><p>Tao, J., <strong>Wang, Y.</strong>, Liu, X., Yang, M. · ICML 2026 AI4Research Workshop · arXiv:2604.12243</p></div>
+            <i aria-hidden="true">↗</i>
+          </a>
+          <article class="publication-row reveal">
+            <span class="publication-year">2024</span>
+            <div><h2>Hotspots and Frontier Analysis of Lunar Exploration Using Knowledge Graph</h2><p><strong>Wang, Y.</strong>, Kang, X., Zhang, S. · GRMSD 2024 · <span data-i18n="firstAuthor">First author</span></p></div>
+          </article>
+          <article class="publication-row reveal">
+            <span class="publication-year">2024</span>
+            <div><h2>Mangrove Birdsong Classification with Unbalanced Data</h2><p>Chen, W., Zhou, Y., <strong>Wang, Y.</strong>, Zhang, X., Wang, J. · ArtInHCI 2024</p></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="about" class="about page-shell section-block">
+        <header class="section-label reveal">
+          <span>03</span>
           <p data-i18n="aboutLabel">About</p>
         </header>
 
@@ -128,7 +205,7 @@
           </aside>
         </div>
 
-        <div class="timeline reveal" aria-label="Education timeline">
+        <div class="timeline reveal" aria-label="Education timeline" data-i18n-aria-label="educationLabel">
           <article>
             <time>2026 →</time>
             <div><strong data-i18n="ntuName">Nanyang Technological University</strong><span data-i18n="ntuDegree">M.Sc. · Computer Control &amp; Automation</span></div>
@@ -144,55 +221,9 @@
         </div>
       </section>
 
-      <section id="research" class="research page-shell section-block">
-        <header class="section-label reveal">
-          <span>02</span>
-          <p data-i18n="researchLabel">Selected research</p>
-        </header>
-
-        <div class="research-intro reveal">
-          <p data-i18n="researchIntro">Four projects trace the question I keep returning to: how can intelligent systems turn representations into reliable action?</p>
-          <span data-i18n="researchMeta">2024—present · Selected work</span>
-        </div>
-
-        <div class="research-grid">
-          <article class="research-card research-card-featured reveal">
-            <div class="research-card-top"><span>01 / AGENTS</span><time data-i18n="scientifyDate">2026—present</time></div>
-            <h2 data-i18n="scientifyTitle">Scientify: autonomous scientific discovery agents</h2>
-            <p data-i18n="scientifyBody">Co-developed an LLM-agent framework that learns from evolving literature and generates research hypotheses. I built API orchestration, figure-digitisation skills, and local inference workflows for large-scale ablations.</p>
-            <ul class="tag-list"><li>LLM agents</li><li>OpenClaw</li><li>Ollama</li><li>Research tooling</li></ul>
-            <a class="text-link" href="https://arxiv.org/abs/2604.12243" target="_blank" rel="noreferrer"><span data-i18n="readPaper">Read the paper</span> ↗</a>
-          </article>
-
-          <article class="research-card reveal">
-            <div class="research-card-top"><span>02 / 3D + RL</span><time>2026</time></div>
-            <h2 data-i18n="thesisTitle">Generative 3D scenes for UAV reinforcement learning</h2>
-            <p data-i18n="thesisBody">Built an end-to-end pipeline for simulator-ready environments: generated scenes and assets, estimated support surfaces, checked collisions, and composed 3D Gaussian Splatting worlds for a downstream UAV RL loop.</p>
-            <ul class="tag-list"><li>3DGS</li><li>World models</li><li>SAM 3D</li><li>Simulation</li></ul>
-            <span class="text-link text-link-muted" data-i18n="undergradThesis">Undergraduate thesis</span>
-          </article>
-
-          <article class="research-card reveal">
-            <div class="research-card-top"><span>03 / GEO AI</span><time>2024—25</time></div>
-            <h2 data-i18n="marsTitle">Mars landing-site selection with LLM reasoning</h2>
-            <p data-i18n="marsBody">Combined Martian terrain layers with structured LLM reasoning to rank landing sites by safety and scientific value, turning geospatial evidence into an inspectable decision pipeline.</p>
-            <ul class="tag-list"><li>LLM reasoning</li><li>DEM</li><li>Geospatial</li><li>Open source</li></ul>
-            <a class="text-link" href="https://github.com/bit10086/mars-landing-site-selector" target="_blank" rel="noreferrer"><span data-i18n="viewCode">View code</span> ↗</a>
-          </article>
-
-          <article class="research-card reveal">
-            <div class="research-card-top"><span>04 / SIGNALS</span><time>2025</time></div>
-            <h2 data-i18n="radarTitle">Radar emitter recognition with DBSCAN + Transformer</h2>
-            <p data-i18n="radarBody">Designed a two-stage pipeline for clustering pulse streams and classifying emitter types. It reached 89% accuracy, a 12-point absolute improvement over the CNN baseline on the same dataset.</p>
-            <ul class="tag-list"><li>Transformer</li><li>DBSCAN</li><li>Signal analysis</li><li>89% accuracy</li></ul>
-            <span class="text-link text-link-muted" data-i18n="researchProject">Research project</span>
-          </article>
-        </div>
-      </section>
-
       <section id="now" class="now page-shell section-block">
         <header class="section-label reveal">
-          <span>03</span>
+          <span>04</span>
           <p data-i18n="questionsLabel">Questions I’m exploring</p>
         </header>
 
@@ -215,28 +246,6 @@
         </div>
       </section>
 
-      <section id="publications" class="publications page-shell section-block">
-        <header class="section-label reveal">
-          <span>04</span>
-          <p data-i18n="publicationsLabel">Publications</p>
-        </header>
-        <div class="publication-list">
-          <a class="publication-row reveal" href="https://arxiv.org/abs/2604.12243" target="_blank" rel="noreferrer">
-            <span class="publication-year">2026</span>
-            <div><h2>Continuous Knowledge Metabolism: Generating Scientific Hypotheses from Evolving Literature</h2><p>Tao, J., <strong>Wang, Y.</strong>, Liu, X., Yang, M. · arXiv:2604.12243</p></div>
-            <i aria-hidden="true">↗</i>
-          </a>
-          <article class="publication-row reveal">
-            <span class="publication-year">2024</span>
-            <div><h2>Hotspots and Frontier Analysis of Lunar Exploration Using Knowledge Graph</h2><p><strong>Wang, Y.</strong>, Kang, X., Zhang, S. · GRMSD 2024 · <span data-i18n="firstAuthor">First author</span></p></div>
-          </article>
-          <article class="publication-row reveal">
-            <span class="publication-year">2024</span>
-            <div><h2>Mangrove Birdsong Classification with Unbalanced Data</h2><p>Chen, W., Zhou, Y., <strong>Wang, Y.</strong>, Zhang, X., Wang, J. · ArtInHCI 2024</p></div>
-          </article>
-        </div>
-      </section>
-
       <section id="contact" class="elsewhere page-shell section-block">
         <header class="section-label reveal">
           <span>05</span>
@@ -255,13 +264,13 @@
             <span class="link-note" data-i18n="codeNote">Open-source experiments and project work</span>
             <i aria-hidden="true">↗</i>
           </a>
-          <a class="link-row reveal" href="mailto:wyb040918@163.com">
+          <a class="link-row reveal" href="mailto:YUBO004@e.ntu.edu.sg">
             <span class="link-type" data-i18n="emailLabel">Email</span>
-            <strong>wyb040918@163.com</strong>
-            <span class="link-note" data-i18n="emailNote">The best way to reach me</span>
+            <strong>YUBO004@e.ntu.edu.sg</strong>
+            <span class="link-note" data-i18n="emailNote">NTU student email · The best way to reach me</span>
             <i aria-hidden="true">↗</i>
           </a>
-          <a class="link-row reveal" href="mailto:wyb040918@163.com?subject=CV%20request">
+          <a class="link-row reveal" href="mailto:YUBO004@e.ntu.edu.sg?subject=CV%20request">
             <span class="link-type">CV</span>
             <strong data-i18n="cvTitle">Curriculum vitae</strong>
             <span class="link-note" data-i18n="cvNote">Available by email · personal details protected</span>
@@ -274,7 +283,7 @@
     <footer class="site-footer page-shell">
       <div class="footer-main reveal">
         <p data-i18n="footerPrompt">Have a question worth exploring?</p>
-        <a href="mailto:wyb040918@163.com"><span data-i18n="footerCta">Let’s talk</span><span>↗</span></a>
+        <a href="mailto:YUBO004@e.ntu.edu.sg"><span data-i18n="footerCta">Let’s talk</span><span>↗</span></a>
       </div>
       <div class="footer-meta">
         <span>© <span data-year></span> Yubo Wang</span>

@@ -1,6 +1,6 @@
 # bit10086.me
 
-Academic homepage for Yubo Wang. The site is a static Vite + TypeScript project deployed with GitHub Pages. It presents research interests, selected projects, publications, education, and collaboration links in English and Chinese.
+Academic homepage for Yubo Wang. The site is a static Vite + TypeScript project deployed with GitHub Pages. It presents selected research and publications first, followed by education, open questions, and collaboration links in English and Chinese.
 
 ## Local development
 
