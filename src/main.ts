@@ -98,7 +98,7 @@ const translations: Record<Language, Record<string, string>> = {
     navPublications: "论文发表",
     navContact: "联系",
     heroStatus: "北京 → 新加坡 · 2026",
-    heroTitle: "你好—<br />我是宇博。",
+    heroTitle: "你好，<br />我是宇博。",
     heroIntro: "我构建连接<em>知识、空间世界与物理行动</em>的智能系统。",
     heroContext: "南洋理工大学硕士新生 · 北京理工大学自动化学士",
     proofLabel: "学术概览",

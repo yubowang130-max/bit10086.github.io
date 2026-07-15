@@ -40,6 +40,11 @@ html[lang="zh-CN"] .footer-main a {
   letter-spacing: -0.055em;
 }
 
+html[lang="zh-CN"] .hero h1 {
+  font-size: clamp(72px, 7.6vw, 112px);
+  line-height: 0.96;
+}
+
 body {
   overflow-x: hidden;
   background:
@@ -268,13 +273,18 @@ html[data-language="en"] .language-toggle span:last-child {
   text-transform: uppercase;
 }
 
-.status span {
+.status > span:first-child {
+  flex: 0 0 auto;
   width: 7px;
   height: 7px;
   background: var(--lime);
   border: 1px solid var(--ink);
   border-radius: 50%;
   box-shadow: 0 0 0 5px rgba(217, 255, 67, 0.2);
+}
+
+.status > span:last-child {
+  white-space: nowrap;
 }
 
 .hero h1 {
@@ -1006,6 +1016,11 @@ a.publication-row:hover {
     font-size: clamp(68px, 10vw, 96px);
   }
 
+  html[lang="zh-CN"] .hero h1 {
+    font-size: clamp(64px, 8vw, 78px);
+    line-height: 0.98;
+  }
+
   .identity-figure {
     min-height: 300px;
   }
@@ -1123,6 +1138,11 @@ a.publication-row:hover {
 
   .hero h1 {
     font-size: clamp(72px, 22vw, 110px);
+  }
+
+  html[lang="zh-CN"] .hero h1 {
+    font-size: clamp(60px, 17vw, 82px);
+    line-height: 1;
   }
 
   .hero-intro {
