@@ -706,6 +706,17 @@ html[data-language="en"] .language-toggle span:last-child {
   background: var(--lime);
 }
 
+.research-card.research-card-featured {
+  grid-column: 1 / -1;
+  min-height: 430px;
+  padding-right: 0;
+  border-right: 0;
+}
+
+.research-card-featured::before {
+  right: 0;
+}
+
 .research-card-top {
   display: flex;
   justify-content: space-between;

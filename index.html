@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#f4f3ef" />
     <meta
       name="description"
-      content="Yubo Wang works across scientific agents, generative 3D environments, control, and embodied intelligent systems."
+      content="Yubo Wang researches embodied AI, hierarchical mobile manipulation, VLN/VLA systems, scientific agents, and generative 3D environments."
     />
     <meta property="og:title" content="Yubo Wang — 王宇博" />
     <meta
@@ -36,8 +36,10 @@
         "knowsAbout": [
           "LLM agents",
           "Generative 3D environments",
-          "Control systems",
-          "Embodied intelligence"
+          "Vision-language navigation",
+          "Vision-language-action models",
+          "Hierarchical mobile manipulation",
+          "Embodied AI"
         ]
       }
     </script>
@@ -78,7 +80,7 @@
             I build intelligent systems that connect <em>knowledge, spatial worlds, and physical action</em>.
           </p>
           <p class="hero-context reveal" data-i18n="heroContext">
-            Incoming M.Sc. student at NTU · B.Eng. in Automation at BIT
+            M.Sc. student at NTU · B.Eng. in Automation at BIT
           </p>
           <div class="hero-proof reveal" aria-label="Academic highlights" data-i18n-aria-label="proofLabel">
             <span><strong>ICML 2026</strong><small data-i18n="proofWorkshop">AI4Research Workshop</small></span>
@@ -102,14 +104,14 @@
           </div>
           <div class="identity-caption">
             <div><strong>王宇博</strong><span>Yubo Wang</span></div>
-            <p data-i18n-html="identityFocus">AI agents / 3D worlds<br />Control systems</p>
+            <p data-i18n-html="identityFocus">Embodied AI / VLN–VLA<br />AI agents / 3D worlds</p>
           </div>
         </aside>
 
         <div class="interest-line reveal" aria-label="Areas of interest" data-i18n-aria-label="interestsLabel">
           <span data-i18n="interestAgents">Scientific agents</span>
           <span data-i18n="interest3d">Generative 3D</span>
-          <span data-i18n="interestControl">Control systems</span>
+          <span data-i18n="interestControl">VLN / VLA</span>
           <span data-i18n="interestEmbodied">Embodied intelligence</span>
         </div>
       </section>
@@ -121,13 +123,21 @@
         </header>
 
         <div class="research-intro reveal">
-          <p data-i18n="researchIntro">Four projects trace the question I keep returning to: how can intelligent systems turn representations into reliable action?</p>
+          <p data-i18n="researchIntro">Five projects trace the question I keep returning to: how can intelligent systems turn representations into reliable action?</p>
           <span data-i18n="researchMeta">2024—present · Selected work</span>
         </div>
 
         <div class="research-grid">
           <article class="research-card research-card-featured reveal">
-            <div class="research-card-top"><span>01 / AGENTS</span><time data-i18n="scientifyDate">2026—present</time></div>
+            <div class="research-card-top"><span>01 / EMBODIED AI</span><time data-i18n="dissertationDate">Aug 2026—present</time></div>
+            <h2 data-i18n="dissertationTitle">Hierarchical mobile manipulation with VLN and VLA models</h2>
+            <p data-i18n="dissertationBody">Developing an embodied-AI framework that decomposes language instructions into navigation, search, approach, grasp, and placement. The project studies VLN/VLM planning, VLA or diffusion-policy control, navigation–manipulation hand-offs, recovery, and safety in simulation with limited real-robot validation.</p>
+            <ul class="tag-list"><li>VLN</li><li>VLA</li><li>PyTorch</li><li>ROS</li><li>Robot simulation</li></ul>
+            <span class="text-link text-link-muted" data-i18n="mscDissertation">M.Sc. dissertation</span>
+          </article>
+
+          <article class="research-card reveal">
+            <div class="research-card-top"><span>02 / AGENTS</span><time data-i18n="scientifyDate">Mar—May 2026</time></div>
             <h2 data-i18n="scientifyTitle">Scientify: autonomous scientific discovery agents</h2>
             <p data-i18n="scientifyBody">Co-developed an LLM-agent framework that learns from evolving literature and generates research hypotheses. I built API orchestration, figure-digitisation skills, and local inference workflows for large-scale ablations.</p>
             <p class="research-result" data-i18n="scientifyResult">Paper result · 72% of topics yielded validated hypotheses · 91% lower token cost</p>
@@ -136,7 +146,7 @@
           </article>
 
           <article class="research-card reveal">
-            <div class="research-card-top"><span>02 / 3D + RL</span><time>2026</time></div>
+            <div class="research-card-top"><span>03 / 3D + RL</span><time>2026</time></div>
             <h2 data-i18n="thesisTitle">Generative 3D scenes for UAV reinforcement learning</h2>
             <p data-i18n="thesisBody">Built an end-to-end pipeline for simulator-ready environments: generated scenes and assets, estimated support surfaces, checked collisions, and composed 3D Gaussian Splatting worlds for a downstream UAV RL loop.</p>
             <ul class="tag-list"><li>3DGS</li><li>World models</li><li>SAM 3D</li><li>Simulation</li></ul>
@@ -144,7 +154,7 @@
           </article>
 
           <article class="research-card reveal">
-            <div class="research-card-top"><span>03 / GEO AI</span><time>2024—25</time></div>
+            <div class="research-card-top"><span>04 / GEO AI</span><time>2024—25</time></div>
             <h2 data-i18n="marsTitle">Mars landing-site selection from terrain constraints</h2>
             <p data-i18n="marsBody">Built a geospatial pipeline that combines illumination and slope constraints to rank candidate landing zones, turning Martian DEM evidence into an inspectable selection workflow.</p>
             <ul class="tag-list"><li>Terrain analysis</li><li>DEM</li><li>Geospatial</li><li>Open source</li></ul>
@@ -152,7 +162,7 @@
           </article>
 
           <article class="research-card reveal">
-            <div class="research-card-top"><span>04 / SIGNALS</span><time>2025</time></div>
+            <div class="research-card-top"><span>05 / SIGNALS</span><time>2025</time></div>
             <h2 data-i18n="radarTitle">Radar emitter recognition with DBSCAN + Transformer</h2>
             <p data-i18n="radarBody">Designed a two-stage pipeline for clustering pulse streams and classifying emitter types. It reached 89% accuracy, a 12-point absolute improvement over the CNN baseline on the same dataset.</p>
             <ul class="tag-list"><li>Transformer</li><li>DBSCAN</li><li>Signal analysis</li><li>89% accuracy</li></ul>
@@ -192,10 +202,10 @@
         <div class="about-grid">
           <div class="about-copy reveal">
             <p data-i18n-html="aboutLead">
-              I’m completing a B.Eng. in Automation at Beijing Institute of Technology and will begin an M.Sc. in <em>Computer Control and Automation</em> at Nanyang Technological University.
+              I’m an M.Sc. student in <em>Computer Control and Automation</em> at Nanyang Technological University, working on hierarchical mobile manipulation with VLN and VLA models. I received my B.Eng. in Automation from Beijing Institute of Technology.
             </p>
             <p data-i18n="aboutBody">
-              My work moves between scientific AI agents, generated 3D environments, and control. I care about the point where a convincing model becomes a system that can make useful decisions under real constraints.
+              My work moves between embodied AI, scientific agents, generated 3D environments, and control. I care about the point where a convincing model becomes a system that can make useful decisions under real constraints.
             </p>
           </div>
 
@@ -240,8 +250,8 @@
           </article>
           <article class="question reveal">
             <span class="question-index">C</span>
-            <h2 data-i18n="questionC">How should learned systems meet classical control?</h2>
-            <p data-i18n="questionCBody">Perception and decision-making that eventually have to survive sensors, noise, and physics.</p>
+            <h2 data-i18n="questionC">How should navigation and manipulation become one reliable system?</h2>
+            <p data-i18n="questionCBody">Language-conditioned task decomposition, VLN–VLA hand-offs, recovery, and safety under real sensor and physics constraints.</p>
           </article>
         </div>
       </section>
