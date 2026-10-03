@@ -1,10 +1,8 @@
-import "@fontsource/newsreader/400.css";
-import "@fontsource/newsreader/400-italic.css";
-import "@fontsource/newsreader/600.css";
-import "@fontsource/dm-mono/400.css";
-import "@fontsource/spline-sans/400.css";
-import "@fontsource/spline-sans/500.css";
-import "@fontsource/spline-sans/600.css";
+import "@fontsource/newsreader/latin-400.css";
+import "@fontsource/dm-mono/latin-400.css";
+import "@fontsource/spline-sans/latin-400.css";
+import "@fontsource/spline-sans/latin-500.css";
+import "@fontsource/spline-sans/latin-600.css";
 import "./style.css";
 
 type Language = "en" | "zh";
@@ -20,7 +18,8 @@ const translations: Record<Language, Record<string, string>> = {
     navPublications: "Publications",
     navContact: "Contact",
     heroStatus: "Beijing → Singapore · 2026",
-    heroTitle: "Hello—<br />I’m Yubo.",
+    heroTitle: 'Yubo Wang<span class="hero-name-secondary">王宇博</span>',
+    identityLocation: "Singapore · NTU",
     heroIntro: "I build intelligent systems that connect <em>knowledge, spatial worlds, and physical action</em>.",
     heroContext: "M.Sc. student at NTU · B.Eng. in Automation at BIT",
     proofLabel: "Academic highlights",
@@ -102,7 +101,8 @@ const translations: Record<Language, Record<string, string>> = {
     navPublications: "论文发表",
     navContact: "联系",
     heroStatus: "北京 → 新加坡 · 2026",
-    heroTitle: "你好，<br />我是宇博。",
+    heroTitle: '王宇博<span class="hero-name-secondary">Yubo Wang</span>',
+    identityLocation: "新加坡 · 南洋理工",
     heroIntro: "我构建连接<em>知识、空间世界与物理行动</em>的智能系统。",
     heroContext: "南洋理工大学在读硕士 · 北京理工大学自动化学士",
     proofLabel: "学术概览",
@@ -214,10 +214,19 @@ const setLanguage = (language: Language) => {
   );
   languageButton?.setAttribute("aria-label", isChinese ? "Switch to English" : "切换为中文");
   languageButton?.setAttribute("title", isChinese ? "Switch to English" : "切换为中文");
-  localStorage.setItem("language", language);
+  try {
+    localStorage.setItem("language", language);
+  } catch {
+    // Language switching still works when browser storage is unavailable.
+  }
 };
 
-const storedLanguage = localStorage.getItem("language");
+let storedLanguage: string | null = null;
+try {
+  storedLanguage = localStorage.getItem("language");
+} catch {
+  // Keep the default language when persistence is blocked.
+}
 const initialLanguage: Language = storedLanguage === "zh" ? "zh" : "en";
 setLanguage(initialLanguage);
 
@@ -241,6 +250,33 @@ menuButton?.addEventListener("click", () => {
 
 nav?.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
 
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && menuButton?.getAttribute("aria-expanded") === "true") {
+    closeMenu();
+    menuButton.focus();
+  }
+});
+
+document.addEventListener("click", (event) => {
+  if (event.target instanceof Node && !nav?.contains(event.target) && !menuButton?.contains(event.target)) {
+    closeMenu();
+  }
+});
+
+window.matchMedia("(min-width: 721px)").addEventListener("change", closeMenu);
+
+const navLinks = Array.from(nav?.querySelectorAll<HTMLAnchorElement>('a[href^="#"]') ?? []);
+const sectionObserver = new IntersectionObserver((entries) => {
+  const visible = entries.filter((entry) => entry.isIntersecting);
+  if (!visible.length) return;
+  const id = visible[0].target.id;
+  navLinks.forEach((link) => {
+    if (link.hash === "#" + id) link.setAttribute("aria-current", "location");
+    else link.removeAttribute("aria-current");
+  });
+}, { rootMargin: "-15% 0px -65% 0px", threshold: 0 });
+document.querySelectorAll("main > section[id]").forEach((section) => sectionObserver.observe(section));
+
 window.addEventListener(
   "scroll",
   () => {
@@ -256,6 +292,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 if (prefersReducedMotion) {
   revealItems.forEach((item) => item.classList.add("is-visible"));
 } else {
+  root.classList.add("motion-ready");
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -265,7 +302,7 @@ if (prefersReducedMotion) {
         }
       });
     },
-    { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    { threshold: 0, rootMargin: "0px 0px -24px 0px" },
   );
   revealItems.forEach((item) => observer.observe(item));
 }
@@ -274,7 +311,7 @@ document.querySelectorAll<HTMLElement>("[data-year]").forEach((item) => {
   item.textContent = String(new Date().getFullYear());
 });
 
-if (identityCard && !prefersReducedMotion) {
+if (identityCard && !prefersReducedMotion && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
   identityCard.addEventListener("pointermove", (event) => {
     const bounds = identityCard.getBoundingClientRect();
     const x = (event.clientX - bounds.left) / bounds.width;
