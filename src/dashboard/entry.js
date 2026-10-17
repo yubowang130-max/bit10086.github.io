@@ -114,20 +114,40 @@ async function logout() {
 }
 
 function login() {
-  gate('欢迎回到你的这一章', '使用已授权的邮箱登录，继续你的学习与生活记录。', `<form id="login-form"><label class="form-field">邮箱<input name="email" type="email" autocomplete="email" required placeholder="你的登录邮箱"></label><button class="button primary" type="submit">发送登录邮件 →</button></form><p id="auth-message" role="status" aria-live="polite"></p><details><summary>邮件里有验证码？</summary><form id="otp-form"><label class="form-field">验证码<input name="token" inputmode="numeric" autocomplete="one-time-code" minlength="6" maxlength="10" required></label><button class="button" type="submit">验证并登录</button></form></details>${store?.pending ? '<button class="button" id="expired-export">先导出未同步更改</button>' : ''}`);
+  gate('欢迎回到你的这一章', '使用已授权的邮箱登录，继续你的学习与生活记录。', `<form id="login-form"><label class="form-field">邮箱<input name="email" type="email" autocomplete="email" required placeholder="你的登录邮箱"></label><label class="form-field">密码<input name="password" type="password" autocomplete="current-password" placeholder="你的工作台密码"></label><button class="button primary" type="submit">登录工作台 →</button><button class="button" type="button" id="email-login">改用邮箱登录链接</button></form><p id="auth-message" role="status" aria-live="polite"></p><details><summary>邮件里有验证码？</summary><form id="otp-form"><label class="form-field">验证码<input name="token" inputmode="numeric" autocomplete="one-time-code" minlength="6" maxlength="10" required></label><button class="button" type="submit">验证并登录</button></form></details>${store?.pending ? '<button class="button" id="expired-export">先导出未同步更改</button>' : ''}`);
   const pendingExport = document.querySelector('#expired-export');
   if (pendingExport) pendingExport.onclick = downloadPending;
-  document.querySelector('#login-form').onsubmit = async event => {
+  const form = document.querySelector('#login-form');
+  const status = document.querySelector('#auth-message');
+  const setBusy = busy => form.querySelectorAll('button').forEach(button => { button.disabled = busy; });
+  form.onsubmit = async event => {
     event.preventDefault();
-    const email = new FormData(event.target).get('email').trim();
-    const button = event.target.querySelector('button');
-    const status = document.querySelector('#auth-message');
-    button.disabled = true;
+    const fields = new FormData(form);
+    const email = fields.get('email').trim();
+    const password = fields.get('password');
+    if (!password) { status.textContent = '请填写工作台密码，或选择邮箱登录链接。'; return; }
+    setBusy(true);
+    status.textContent = '正在登录…';
+    try {
+      const { error } = await client.auth.signInWithPassword({ email, password });
+      if (error) status.textContent = '登录失败，请检查邮箱与密码后重试。';
+      else {
+        form.querySelector('[name="password"]').value = '';
+        if (loaded) location.reload();
+        else await showWorkspace();
+      }
+    } catch { status.textContent = '网络连接失败，请稍后重试。'; }
+    finally { setBusy(false); }
+  };
+  document.querySelector('#email-login').onclick = async () => {
+    if (!form.querySelector('[name="email"]').reportValidity()) return;
+    const email = new FormData(form).get('email').trim();
+    setBusy(true);
     try {
       const { error } = await client.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo: new URL('/dashboard/', location.origin).href } });
       status.textContent = error ? '暂时无法发送。请确认使用已授权的邮箱，稍后重试。' : '若邮箱已获授权，登录邮件将发送到你的收件箱。请在此设备打开邮件链接，或输入邮件中的验证码。';
     } catch { status.textContent = '网络连接失败，请稍后重试。'; }
-    finally { button.disabled = false; }
+    finally { setBusy(false); }
   };
   document.querySelector('#otp-form').onsubmit = async event => {
     event.preventDefault();
@@ -148,7 +168,11 @@ function login() {
 }
 
 // No configuration means a locked screen, never a local-storage fallback.
-if (!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(url) || !/^sb_publishable_[A-Za-z0-9_-]+$/.test(key) || /REPLACE_ME/.test(key)) {
+if (location.protocol !== 'https:' && !['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) {
+  const secureURL = new URL(location.href);
+  secureURL.protocol = 'https:';
+  gate('请使用安全连接', '工作台需要 HTTPS 才能登录和读取私人记录。', `<a class="button primary" href="${escape(secureURL.href)}">通过 HTTPS 打开</a>`);
+} else if (!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(url) || !/^sb_publishable_[A-Za-z0-9_-]+$/.test(key) || /REPLACE_ME/.test(key)) {
   gate('工作台即将就绪', '个人主页正常开放。私人工作台正在配置云端登录与存储，完成后即可在 Mac 和其他设备上继续使用。');
 } else {
   client = createClient(url, key, { auth: { flowType: 'pkce', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: 'chapter-auth-v1' } });

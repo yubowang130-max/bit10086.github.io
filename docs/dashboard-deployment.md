@@ -45,7 +45,10 @@ NTULearn data is a snapshot, not a continuously running scraper. No NTULearn cre
 - Created `chapter-personal` in the owner-approved organization and Singapore region (`ap-southeast-1`); project ref `lnomehiozptkloyrnjfb`.
 - Applied the Chapter migration successfully. Live REST checks return 401 for anonymous reads and owner checks; a database check with the authenticated role and no identity returns no records and no owner access.
 - Both tables have RLS enabled, and browser roles cannot write either table directly. The security advisor reports only the intentional informational [RLS enabled without policy notice](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy) for the administrator-only allowlist. No browser policy is intended for that table.
-- Still pending: Auth user creation and owner allowlisting, Auth URL settings, custom-domain HTTPS repair, successful email login and cross-device verification, private data import, and production deployment. The browser requires the owner to sign in to the Supabase management dashboard to finish Auth configuration.
+- The owner has created and confirmed their Auth account. It has been added to the administrator-managed allowlist; a hosted database check confirms owner authorization. Public signup and anonymous sign-in are disabled, verified through the Auth settings API.
+- Site URL is `https://bit10086.me/dashboard/`; exact redirects allow that URL and `http://127.0.0.1:4175/dashboard/`. Password login is available alongside email login links. Passwords are passed only to Supabase Auth and are not saved by application code.
+- The existing domain was removed and re-added to GitHub Pages to restart HTTPS provisioning, following GitHub troubleshooting guidance. DNS records remain unchanged. The app refuses login over non-loopback HTTP.
+- Still pending: custom-domain HTTPS completion, actual owner login and cross-device verification, private data import, and production deployment.
 
 `npm test` uses PGlite (PostgreSQL) to execute the actual migration and check anonymous denial, owner allowlisting, read isolation, prevention of direct writes, revision conflicts, idempotent retry and access revocation. Additional tests exercise pending-save preservation and private snapshot validation.
 
