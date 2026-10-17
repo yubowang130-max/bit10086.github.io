@@ -4,3 +4,9 @@ dist
 *.local
 .vite-*.log
 codex.md
+
+.env
+.env.*
+!.env.example
+chapter-backup-*.json
+chapter-bills-*.csv
