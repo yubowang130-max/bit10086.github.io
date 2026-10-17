@@ -1,0 +1,38 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {PGlite} from '@electric-sql/pglite';
+const A='00000000-0000-4000-8000-000000000001',B='00000000-0000-4000-8000-000000000002';
+const W1='00000000-0000-4000-8000-000000000011',W2='00000000-0000-4000-8000-000000000012';
+const doc={version:1,profile:{},projects:{},courses:[],tasks:[],health:[],transactions:[],applications:[]};
+
+test('PostgreSQL permissions, owner allowlist, revisions and idempotent retry',async()=>{
+ const db=new PGlite();
+ await db.exec(`create role anon; create role authenticated; create schema auth; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$; grant usage on schema auth to anon,authenticated; grant execute on function auth.uid() to anon,authenticated; insert into auth.users values ('${A}'),('${B}');`);
+ await db.exec(await readFile(new URL('../supabase/migrations/202610180001_chapter.sql',import.meta.url),'utf8'));
+ await db.exec(`insert into public.chapter_owners values ('${A}'); set role anon;`);
+ await assert.rejects(db.query('select * from public.chapter_state'),/permission denied/);
+ await assert.rejects(db.query('select public.chapter_is_owner()'),/permission denied/);
+ await db.exec(`set role authenticated; select set_config('request.jwt.claim.sub','${B}',false);`);
+ assert.equal((await db.query('select public.chapter_is_owner() as ok')).rows[0].ok,false);
+ assert.equal((await db.query('select * from public.chapter_state')).rows.length,0);
+ await assert.rejects(db.query('select public.chapter_save($1,0,$2,$3)',[B,W1,doc]),/CHAPTER_FORBIDDEN/);
+ await assert.rejects(db.query(`insert into public.chapter_owners values ('${B}')`),/permission denied/);
+ await db.exec(`select set_config('request.jwt.claim.sub','${A}',false);`);
+ assert.equal((await db.query('select public.chapter_is_owner() as ok')).rows[0].ok,true);
+ assert.equal(Number((await db.query('select public.chapter_save($1,0,$2,$3) as rev',[A,W1,doc])).rows[0].rev),1);
+ assert.equal(Number((await db.query('select public.chapter_save($1,0,$2,$3) as rev',[A,W1,doc])).rows[0].rev),1);
+ await assert.rejects(db.query('select public.chapter_save($1,0,$2,$3)',[A,W2,doc]),/CHAPTER_CONFLICT/);
+ await assert.rejects(db.query('select public.chapter_save($1,1,$2,$3)',[B,W2,doc]),/CHAPTER_FORBIDDEN/);
+ await assert.rejects(db.query('update public.chapter_state set revision=99'),/permission denied/);
+ await assert.rejects(db.query('delete from public.chapter_state'),/permission denied/);
+ await assert.rejects(db.query('select public.chapter_save($1,1,$2,$3)',[A,W2,{version:1}]),/CHAPTER_INVALID_DOCUMENT/);
+ const changed={...doc,tasks:['test']};
+ assert.equal(Number((await db.query('select public.chapter_save($1,1,$2,$3) as rev',[A,W2,changed])).rows[0].rev),2);
+ await assert.rejects(db.query('select public.chapter_save($1,1,$2,$3)',[A,W2,doc]),/CHAPTER_WRITE_ID_REUSED/);
+ await db.exec(`select set_config('request.jwt.claim.sub','${B}',false);`);
+ assert.equal((await db.query('select * from public.chapter_state')).rows.length,0);
+ await db.exec(`reset role; delete from public.chapter_owners; set role authenticated; select set_config('request.jwt.claim.sub','${A}',false);`);
+ assert.equal((await db.query('select * from public.chapter_state')).rows.length,0);
+ await db.close();
+});
