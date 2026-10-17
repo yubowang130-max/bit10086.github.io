@@ -1,5 +1,9 @@
 begin;
 
+create schema chapter_private;
+revoke all on schema chapter_private from public, anon;
+grant usage on schema chapter_private to authenticated;
+
 -- Allowlist is administered through SQL only, never by browser clients.
 create table public.chapter_owners (
   user_id uuid primary key references auth.users(id) on delete cascade
@@ -7,9 +11,14 @@ create table public.chapter_owners (
 alter table public.chapter_owners enable row level security;
 revoke all on public.chapter_owners from anon, authenticated;
 
-create function public.chapter_is_owner() returns boolean
+create function chapter_private.chapter_is_owner() returns boolean
 language sql stable security definer set search_path = ''
 as $$ select exists (select 1 from public.chapter_owners where user_id = (select auth.uid())); $$;
+revoke all on function chapter_private.chapter_is_owner() from public, anon;
+grant execute on function chapter_private.chapter_is_owner() to authenticated;
+create function public.chapter_is_owner() returns boolean
+language sql stable security invoker set search_path = ''
+as $$ select chapter_private.chapter_is_owner(); $$;
 revoke all on function public.chapter_is_owner() from public, anon;
 grant execute on function public.chapter_is_owner() to authenticated;
 
@@ -27,7 +36,7 @@ create policy chapter_read_own on public.chapter_state for select to authenticat
 using (owner_id = (select auth.uid()) and (select public.chapter_is_owner()));
 
 -- Atomic compare-and-swap; a repeated write ID safely handles a lost response.
-create function public.chapter_save(p_owner_id uuid, p_expected_revision bigint, p_write_id uuid, p_document jsonb)
+create function chapter_private.chapter_save(p_owner_id uuid, p_expected_revision bigint, p_write_id uuid, p_document jsonb)
 returns bigint language plpgsql security definer set search_path = ''
 as $$
 declare current_row public.chapter_state%rowtype;
@@ -76,6 +85,11 @@ begin
   return 1;
 end;
 $$;
+revoke all on function chapter_private.chapter_save(uuid, bigint, uuid, jsonb) from public, anon;
+grant execute on function chapter_private.chapter_save(uuid, bigint, uuid, jsonb) to authenticated;
+create function public.chapter_save(p_owner_id uuid, p_expected_revision bigint, p_write_id uuid, p_document jsonb)
+returns bigint language sql security invoker set search_path = ''
+as $$ select chapter_private.chapter_save(p_owner_id, p_expected_revision, p_write_id, p_document); $$;
 revoke all on function public.chapter_save(uuid, bigint, uuid, jsonb) from public, anon;
 grant execute on function public.chapter_save(uuid, bigint, uuid, jsonb) to authenticated;
 

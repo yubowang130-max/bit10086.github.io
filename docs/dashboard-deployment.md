@@ -8,7 +8,7 @@ The public academic homepage remains at `/`. Its bilingual navigation links to `
 2. Apply `supabase/migrations/202610180001_chapter.sql`.
 3. In Supabase Authentication, create or invite the owner's account. Confirm which email the owner wants to use. Keep public signup disabled; this application uses `shouldCreateUser: false`.
 4. Add that account's actual UUID to `public.chapter_owners` using the SQL editor. Do not put an email address, UUID placeholder, or an assumed generated ID into a migration. The account must exist in `auth.users` first.
-5. Set the Auth Site URL to `https://bit10086.me/dashboard/` and allow that exact URL as a redirect. For local verification also allow the specific loopback test address. Supabase's default email template supplies a login link; the page also supports an email OTP if the template includes `{{ .Token }}`.
+5. Set the Auth Site URL to `https://bit10086.me/dashboard/` and allow that exact URL as a redirect. For local verification also allow the specific loopback test address. Supabase's default email template supplies a login link; the page also supports an email OTP if the template includes `{{ .Token }}`. New free-tier projects using the default SMTP cannot customize templates; use the default login link unless a custom SMTP provider is configured.
 6. Configure GitHub repository Actions variables `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` with the project URL and enabled **publishable** key. These values are public browser configuration. Never use a secret/service-role key. Local development reads the same names from `.env.local`.
 7. Resolve the existing custom-domain TLS mismatch before sending login links to the domain. Check Settings → Pages → Custom domain and certificate provisioning. DNS A records observed on 2026-10-18 already point at GitHub Pages. The GitHub-hosted project URL currently redirects to **HTTP** `bit10086.me`; HTTPS currently presents a certificate that does not match the domain. No DNS changes have been made by this migration.
 8. Run `npm test` and `npm run build` with Node 22.12 or newer. Deploy through the existing Pages workflow after the preceding settings are in place.
@@ -21,6 +21,7 @@ When configuration is missing, the route shows a locked setup screen. It never f
 - `chapter_owners` is an administrator-managed allowlist. Browser roles have no access to change it.
 - `chapter_state` stores one JSON document for each owner, with revision and write-operation ID.
 - Row-level security allows an approved account to read only its own row. Direct client inserts, updates and deletes are revoked.
+- Privileged implementation functions live in the non-exposed `chapter_private` schema. Public RPC entry points run as the caller, with explicit execute grants. Keep `chapter_private` out of the Data API exposed-schema list.
 - `chapter_save` checks the authenticated account against both the bound owner ID and the allowlist. It performs an atomic revision check and serialises initial creation as well as updates.
 - Retrying the same write ID after a lost response is idempotent. Reusing that ID for different content is rejected.
 - On save failure, the pending document stays in memory, editing is blocked, and the user can retry or download the pending data. No success toast appears before the database acknowledges the write.

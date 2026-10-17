@@ -10,6 +10,8 @@ test('PostgreSQL permissions, owner allowlist, revisions and idempotent retry',a
  const db=new PGlite();
  await db.exec(`create role anon; create role authenticated; create schema auth; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$; grant usage on schema auth to anon,authenticated; grant execute on function auth.uid() to anon,authenticated; insert into auth.users values ('${A}'),('${B}');`);
  await db.exec(await readFile(new URL('../supabase/migrations/202610180001_chapter.sql',import.meta.url),'utf8'));
+ assert.equal((await db.query("select has_schema_privilege('anon','chapter_private','USAGE') as ok")).rows[0].ok,false);
+ assert.equal((await db.query("select p.prosecdef from pg_proc p join pg_namespace n on p.pronamespace=n.oid where n.nspname='public' and p.proname='chapter_save'")).rows[0].prosecdef,false);
  await db.exec(`insert into public.chapter_owners values ('${A}'); set role anon;`);
  await assert.rejects(db.query('select * from public.chapter_state'),/permission denied/);
  await assert.rejects(db.query('select public.chapter_is_owner()'),/permission denied/);
