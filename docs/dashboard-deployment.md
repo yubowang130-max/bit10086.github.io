@@ -48,7 +48,9 @@ NTULearn data is a snapshot, not a continuously running scraper. No NTULearn cre
 - The owner has created and confirmed their Auth account. It has been added to the administrator-managed allowlist; a hosted database check confirms owner authorization. Public signup and anonymous sign-in are disabled, verified through the Auth settings API.
 - Site URL is `https://bit10086.me/dashboard/`; exact redirects allow that URL and `http://127.0.0.1:4175/dashboard/`. Password login is available alongside email login links. Passwords are passed only to Supabase Auth and are not saved by application code.
 - The existing domain was removed and re-added to GitHub Pages to restart HTTPS provisioning, following GitHub troubleshooting guidance. DNS records remain unchanged. The app refuses login over non-loopback HTTP.
-- Still pending: custom-domain HTTPS completion, actual owner login and cross-device verification, private data import, and production deployment.
+- HTTPS certificate validation now succeeds and HTTP redirects to HTTPS. GitHub Pages Enforce HTTPS is enabled.
+- The original local backup was validated with the application validator and inserted only if the owner had no cloud document. Stored JSON equality was verified; revision remains 1. A hosted authenticated-role read/write check passed inside a rolled-back transaction, leaving the migrated records unchanged. The backup remains local and is excluded from this repository.
+- Still pending at this checkpoint: actual owner browser login and cross-device verification, plus production deployment. Email delivery is an optional alternative and has not been tested.
 
 `npm test` uses PGlite (PostgreSQL) to execute the actual migration and check anonymous denial, owner allowlisting, read isolation, prevention of direct writes, revision conflicts, idempotent retry and access revocation. Additional tests exercise pending-save preservation and private snapshot validation.
 
