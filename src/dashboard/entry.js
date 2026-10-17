@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { CloudStore } from './cloud-store.js';
+import { projectConfig } from './project-config.js';
 import './style.css';
 import './auth.css';
 
@@ -7,8 +8,8 @@ const root = document.querySelector('#auth-root');
 const app = document.querySelector('#dashboard-app');
 const syncDialog = document.querySelector('#sync-dialog');
 const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const url = import.meta.env.VITE_SUPABASE_URL || '';
-const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || '';
+const url = import.meta.env.VITE_SUPABASE_URL || projectConfig.url;
+const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || projectConfig.publishableKey;
 let client, store, loaded = false, loading = false;
 
 function gate(title, detail, content = '') {

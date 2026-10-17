@@ -9,7 +9,7 @@ The public academic homepage remains at `/`. Its bilingual navigation links to `
 3. In Supabase Authentication, create or invite the owner's account. Confirm which email the owner wants to use. Keep public signup disabled; this application uses `shouldCreateUser: false`.
 4. Add that account's actual UUID to `public.chapter_owners` using the SQL editor. Do not put an email address, UUID placeholder, or an assumed generated ID into a migration. The account must exist in `auth.users` first.
 5. Set the Auth Site URL to `https://bit10086.me/dashboard/` and allow that exact URL as a redirect. For local verification also allow the specific loopback test address. Supabase's default email template supplies a login link; the page also supports an email OTP if the template includes `{{ .Token }}`. New free-tier projects using the default SMTP cannot customize templates; use the default login link unless a custom SMTP provider is configured.
-6. Configure GitHub repository Actions variables `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` with the project URL and enabled **publishable** key. These values are public browser configuration. Never use a secret/service-role key. Local development reads the same names from `.env.local`.
+6. The approved project's URL and enabled **publishable** key are in `src/dashboard/project-config.js`. These are public browser configuration; Auth and RLS enforce access. Optional GitHub Actions variables `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` override this configuration for another deployment. Never use a secret/service-role key. Local development can override the same names in `.env.local`.
 7. Resolve the existing custom-domain TLS mismatch before sending login links to the domain. Check Settings → Pages → Custom domain and certificate provisioning. DNS A records observed on 2026-10-18 already point at GitHub Pages. The GitHub-hosted project URL currently redirects to **HTTP** `bit10086.me`; HTTPS currently presents a certificate that does not match the domain. No DNS changes have been made by this migration.
 8. Run `npm test` and `npm run build` with Node 22.12 or newer. Deploy through the existing Pages workflow after the preceding settings are in place.
 9. Sign in with the owner account, verify another unauthorised account cannot read/write, create a test record, reload on a second device, and confirm the same record is returned. Test concurrent edits and verify the stale device is blocked rather than overwriting.
@@ -39,6 +39,13 @@ After login, import that backup through Settings → Import. Import replaces the
 NTULearn data is a snapshot, not a continuously running scraper. No NTULearn credentials, cookies, private grades, real personal ledger, or research selections are included in the deployed static assets.
 
 ## Checks
+
+### Hosted setup status — 2026-10-18
+
+- Created `chapter-personal` in the owner-approved organization and Singapore region (`ap-southeast-1`); project ref `lnomehiozptkloyrnjfb`.
+- Applied the Chapter migration successfully. Live REST checks return 401 for anonymous reads and owner checks; a database check with the authenticated role and no identity returns no records and no owner access.
+- Both tables have RLS enabled, and browser roles cannot write either table directly. The security advisor reports only the intentional informational [RLS enabled without policy notice](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy) for the administrator-only allowlist. No browser policy is intended for that table.
+- Still pending: Auth user creation and owner allowlisting, Auth URL settings, custom-domain HTTPS repair, successful email login and cross-device verification, private data import, and production deployment. The browser requires the owner to sign in to the Supabase management dashboard to finish Auth configuration.
 
 `npm test` uses PGlite (PostgreSQL) to execute the actual migration and check anonymous denial, owner allowlisting, read isolation, prevention of direct writes, revision conflicts, idempotent retry and access revocation. Additional tests exercise pending-save preservation and private snapshot validation.
 
