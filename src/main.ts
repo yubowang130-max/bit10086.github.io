@@ -19,7 +19,6 @@ const translations: Record<Language, Record<string, string>> = {
     navResearch: "Research",
     navPublications: "Publications",
     navContact: "Contact",
-    navDashboard: "My workspace",
     heroStatus: "Beijing → Singapore · 2026",
     heroTitle: "Hello—<br />I’m Yubo.",
     heroIntro: "I build intelligent systems that connect <em>knowledge, spatial worlds, and physical action</em>.",
@@ -102,7 +101,6 @@ const translations: Record<Language, Record<string, string>> = {
     navResearch: "研究项目",
     navPublications: "论文发表",
     navContact: "联系",
-    navDashboard: "我的工作台",
     heroStatus: "北京 → 新加坡 · 2026",
     heroTitle: "你好，<br />我是宇博。",
     heroIntro: "我构建连接<em>知识、空间世界与物理行动</em>的智能系统。",
@@ -242,6 +240,13 @@ menuButton?.addEventListener("click", () => {
 });
 
 nav?.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && menuButton?.getAttribute("aria-expanded") === "true") {
+    closeMenu();
+    menuButton.focus();
+  }
+});
 
 window.addEventListener(
   "scroll",
