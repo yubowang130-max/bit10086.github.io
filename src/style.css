@@ -161,7 +161,7 @@ button {
   place-items: center;
   color: var(--paper);
   background: var(--ink);
-  font: 10px var(--mono);
+  font: 12px var(--mono);
 }
 
 .site-nav {
@@ -213,7 +213,7 @@ button {
   color: var(--muted);
   background: transparent;
   cursor: pointer;
-  font: 9px var(--mono);
+  font: 11px var(--mono);
   letter-spacing: 0.02em;
 }
 
@@ -268,7 +268,7 @@ html[data-language="en"] .language-toggle span:last-child {
   align-items: center;
   margin: 0 0 42px;
   color: var(--muted);
-  font: 9px var(--mono);
+  font: 11px var(--mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -313,7 +313,7 @@ html[data-language="en"] .language-toggle span:last-child {
 .hero-context {
   margin: 22px 0 0;
   color: var(--muted);
-  font: 10px/1.6 var(--mono);
+  font: 12px/1.6 var(--mono);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -342,7 +342,7 @@ html[data-language="en"] .language-toggle span:last-child {
 .hero-proof small {
   margin-top: 4px;
   color: var(--muted);
-  font: 8px/1.3 var(--mono);
+  font: 11px/1.3 var(--mono);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -360,7 +360,7 @@ html[data-language="en"] .language-toggle span:last-child {
   justify-content: space-between;
   padding: 13px 15px;
   border: 1px solid var(--ink);
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 0.03em;
   transition: color 180ms ease, background 180ms ease, transform 180ms ease;
 }
@@ -417,7 +417,7 @@ html[data-language="en"] .language-toggle span:last-child {
 .identity-topline {
   padding-bottom: 15px;
   border-bottom: 1px solid var(--ink);
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 0.08em;
 }
 
@@ -500,7 +500,7 @@ html[data-language="en"] .language-toggle span:last-child {
 .identity-caption span,
 .identity-caption p {
   color: var(--muted);
-  font: 10px/1.55 var(--mono);
+  font: 12px/1.55 var(--mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -522,7 +522,7 @@ html[data-language="en"] .language-toggle span:last-child {
 .interest-line span {
   padding: 15px 12px;
   color: var(--muted);
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 0.06em;
   text-align: center;
   text-transform: uppercase;
@@ -543,7 +543,7 @@ html[data-language="en"] .language-toggle span:last-child {
   align-items: center;
   padding-bottom: 23px;
   border-bottom: 1px solid var(--ink);
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -583,7 +583,7 @@ html[data-language="en"] .language-toggle span:last-child {
 }
 
 .small-note span {
-  font: 8px var(--mono);
+  font: 11px var(--mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -617,7 +617,7 @@ html[data-language="en"] .language-toggle span:last-child {
   display: block;
   margin-bottom: 34px;
   color: var(--muted);
-  font: 8px var(--mono);
+  font: 11px var(--mono);
 }
 
 .timeline div {
@@ -633,7 +633,7 @@ html[data-language="en"] .language-toggle span:last-child {
 .timeline span {
   margin-top: 6px;
   color: var(--muted);
-  font: 9px var(--mono);
+  font: 11px var(--mono);
 }
 
 .research-intro,
@@ -661,7 +661,7 @@ html[data-language="en"] .language-toggle span:last-child {
 .contact-intro span {
   max-width: 240px;
   color: var(--muted);
-  font: 10px/1.6 var(--mono);
+  font: 12px/1.6 var(--mono);
   letter-spacing: 0.06em;
   text-align: right;
   text-transform: uppercase;
@@ -721,7 +721,7 @@ html[data-language="en"] .language-toggle span:last-child {
   display: flex;
   justify-content: space-between;
   color: var(--muted);
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -750,7 +750,7 @@ html[data-language="en"] .language-toggle span:last-child {
   border-left: 3px solid var(--lime);
   color: var(--ink);
   background: rgba(217, 255, 67, 0.12);
-  font: 10px/1.5 var(--mono);
+  font: 12px/1.5 var(--mono);
   letter-spacing: 0.015em;
 }
 
@@ -767,7 +767,7 @@ html[data-language="en"] .language-toggle span:last-child {
   padding: 7px 9px;
   border: 1px solid var(--line);
   color: var(--muted);
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -779,8 +779,9 @@ html[data-language="en"] .language-toggle span:last-child {
   align-self: flex-start;
   margin-top: auto;
   padding-bottom: 5px;
+  min-height: 32px;
   border-bottom: 1px solid var(--ink);
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -810,7 +811,7 @@ html[data-language="en"] .language-toggle span:last-child {
   place-items: center;
   border: 1px solid var(--ink);
   border-radius: 50%;
-  font: 9px var(--mono);
+  font: 11px var(--mono);
   transition: color 180ms ease, background 180ms ease;
 }
 
@@ -910,7 +911,7 @@ a.publication-row:hover {
 .link-type,
 .link-note {
   color: var(--muted);
-  font: 10px/1.4 var(--mono);
+  font: 12px/1.4 var(--mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -945,7 +946,7 @@ a.publication-row:hover {
 .footer-main p {
   margin: 0;
   color: var(--muted);
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -983,7 +984,7 @@ a.publication-row:hover {
   padding: 20px 0 34px;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -993,10 +994,12 @@ a.publication-row:hover {
 }
 
 .footer-meta a {
+  margin-block: -10px;
+  padding-block: 10px;
   text-align: right;
 }
 
-.reveal {
+.js .reveal {
   opacity: 0;
   transform: translateY(18px);
   transition:
@@ -1004,7 +1007,7 @@ a.publication-row:hover {
     transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.reveal.is-visible {
+.js .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
@@ -1084,7 +1087,7 @@ a.publication-row:hover {
     border: 0;
     color: inherit;
     background: transparent;
-    font: 9px var(--mono);
+    font: 11px var(--mono);
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }

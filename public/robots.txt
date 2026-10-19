@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /dashboard/
+
+Sitemap: https://bit10086.me/sitemap.xml
