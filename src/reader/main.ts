@@ -102,13 +102,24 @@ ui.theme.onclick = () => {
 };
 
 
-function togglePanel(cls: string) {
+// Wide screens: panels collapse in the grid (remembered).
+// Narrow screens: panels are hidden by default and open as overlays.
+const narrowLib = matchMedia('(max-width: 760px)');
+const narrowNotes = matchMedia('(max-width: 1100px)');
+function togglePanel(cls: 'no-lib' | 'no-notes') {
+  const narrow = cls === 'no-lib' ? narrowLib.matches : narrowNotes.matches;
+  if (narrow) {
+    const overlay = cls === 'no-lib' ? 'show-lib' : 'show-notes';
+    ui.app.classList.remove(overlay === 'show-lib' ? 'show-notes' : 'show-lib');
+    ui.app.classList.toggle(overlay);
+    return;
+  }
   ui.app.classList.toggle(cls);
-  localStorage.setItem('reader-layout', ui.app.className);
+  localStorage.setItem('reader-layout', [...ui.app.classList].filter((c) => c.startsWith('no-')).join(' '));
   setTimeout(() => pdfViewer && pdfViewer.currentScaleValue && refit(), 220);
 }
 const savedLayout = localStorage.getItem('reader-layout');
-if (savedLayout) ui.app.className = savedLayout;
+if (savedLayout) ui.app.classList.add(...savedLayout.split(' ').filter((c) => c === 'no-lib' || c === 'no-notes'));
 ui.toggleLib.onclick = () => togglePanel('no-lib');
 ui.toggleNotes.onclick = () => togglePanel('no-notes');
 
@@ -117,15 +128,15 @@ ui.toggleNotes.onclick = () => togglePanel('no-notes');
 function renderList() {
   const q = state.query.trim().toLowerCase();
   const list = state.entries.filter((e) => {
-    const m = state.meta.get(e.key);
+    const m = state.meta.get(e.id);
     if (state.filter === 'star' && !m?.star) return false;
     if (state.filter !== 'all' && state.filter !== 'star' && (m?.status ?? 'unread') !== state.filter) return false;
     return !q || e.key.toLowerCase().includes(q);
   });
 
   const recent = state.entries
-    .filter((e) => (state.meta.get(e.key)?.lastOpened ?? 0) > 0)
-    .sort((a, b) => state.meta.get(b.key)!.lastOpened - state.meta.get(a.key)!.lastOpened)
+    .filter((e) => (state.meta.get(e.id)?.lastOpened ?? 0) > 0)
+    .sort((a, b) => state.meta.get(b.id)!.lastOpened - state.meta.get(a.id)!.lastOpened)
     .slice(0, 5);
 
   const groups = new Map<string, Entry[]>();
@@ -134,10 +145,10 @@ function renderList() {
     groups.get(e.dir)!.push(e);
   }
   const item = (e: Entry) => {
-    const m = state.meta.get(e.key);
+    const m = state.meta.get(e.id);
     const st = m?.status ?? 'unread';
     const pct = m && m.page > 1 ? ` · 第 ${m.page} 页` : '';
-    return `<li><button class="file ${state.current?.key === e.key ? 'active' : ''}" data-key="${escapeHtml(e.key)}" title="${escapeHtml(e.key)}">
+    return `<li><button class="file ${state.current?.id === e.id ? 'active' : ''}" data-id="${escapeHtml(e.id)}" title="${escapeHtml(e.key)}">
       <span class="dot ${st}" aria-label="${STATUS_LABEL[st]}"></span>
       <span class="fname">${m?.star ? '<b class="starred">★</b> ' : ''}${escapeHtml(e.name.replace(/\.pdf$/i, ''))}</span>
       <span class="fmeta">${e.kind === 'pdf' ? 'PDF' : 'TXT'} · ${fmtSize(e.size)}${pct}</span>
@@ -156,7 +167,7 @@ function renderList() {
   else if (!list.length) html = `<li class="none">没有匹配的文件</li>`;
   ui.files.innerHTML = html;
 
-  const done = state.entries.filter((e) => state.meta.get(e.key)?.status === 'done').length;
+  const done = state.entries.filter((e) => state.meta.get(e.id)?.status === 'done').length;
   ui.libFoot.textContent = state.entries.length
     ? `${state.entries.length} 个文件 · 已读 ${done} · 文件不会上传`
     : '文件只在你的电脑上读取，不会上传。';
@@ -165,8 +176,9 @@ function renderList() {
 ui.files.addEventListener('click', (ev) => {
   const btn = (ev.target as HTMLElement).closest<HTMLButtonElement>('button.file');
   if (!btn) return;
-  const e = state.entries.find((x) => x.key === btn.dataset.key);
+  const e = state.entries.find((x) => x.id === btn.dataset.id);
   if (e) openEntry(e);
+  ui.app.classList.remove('show-lib');
 });
 ui.search.addEventListener('input', () => {
   state.query = ui.search.value;
@@ -182,18 +194,30 @@ ui.filters.addEventListener('click', (ev) => {
 
 /* ---------- folders ---------- */
 
+// Give every folder a persistent id so two folders with the same file names never share notes.
+async function rootIdFor(root: FileSystemDirectoryHandle): Promise<string> {
+  const roots = (await kvGet<{ id: string; handle: FileSystemDirectoryHandle }[]>('roots')) || [];
+  for (const r of roots) if (await r.handle.isSameEntry(root)) return r.id;
+  const id = 'dir-' + crypto.randomUUID().slice(0, 8);
+  roots.push({ id, handle: root });
+  await kvSet('roots', roots);
+  return id;
+}
+
 async function loadFolder(root: FileSystemDirectoryHandle, mode: 'readwrite' | 'read') {
+  await flushNotes(); // save the open paper's notes into its own folder before switching
+  const rootId = await rootIdFor(root);
   state.root = root;
   state.canWrite = mode === 'readwrite';
   ui.reconnect.hidden = true;
   ui.folderName.textContent = `📁 ${root.name}` + (state.canWrite ? '' : '（只读，笔记仅存在浏览器里）');
   ui.files.innerHTML = '<li class="none">正在扫描…</li>';
-  state.entries = await scanFolder(root, (n) => {
+  state.entries = (await scanFolder(root, rootId, (n) => {
     if (n % 25 === 0) ui.files.innerHTML = `<li class="none">正在扫描… 已找到 ${n} 个</li>`;
-  });
+  })).map((e) => ({ ...e, canWrite: mode === 'readwrite' }));
   renderList();
   const last = await kvGet<string>('lastOpened');
-  const e = last && state.entries.find((x) => x.key === last);
+  const e = last && state.entries.find((x) => x.id === last);
   if (e && !state.current) openEntry(e);
 }
 
@@ -219,8 +243,9 @@ ui.reconnect.onclick = async () => {
   loadFolder(root, mode);
 };
 
-ui.pickFiles.addEventListener('change', () => {
+ui.pickFiles.addEventListener('change', async () => {
   if (!ui.pickFiles.files?.length) return;
+  await flushNotes();
   state.root = null;
   state.canWrite = false;
   state.entries = entriesFromFiles(ui.pickFiles.files);
@@ -277,7 +302,7 @@ async function ensurePdf() {
   eventBus.on('pagechanging', (e: { pageNumber: number }) => {
     ui.pageInput.value = String(e.pageNumber);
     if (state.current) {
-      const m = metaFor(state.current.key);
+      const m = metaFor(state.current.id);
       m.page = e.pageNumber;
       if (m.status === 'unread' && e.pageNumber > 1) {
         m.status = 'reading';
@@ -290,7 +315,7 @@ async function ensurePdf() {
   eventBus.on('scalechanging', (e: { scale: number; presetValue?: string }) => {
     ui.zoomLabel.textContent = Math.round(e.scale * 100) + '%';
     if (state.current) {
-      const m = metaFor(state.current.key);
+      const m = metaFor(state.current.id);
       m.scale = e.presetValue || String(e.scale);
       saveMetaSoon(m);
     }
@@ -318,10 +343,10 @@ window.addEventListener('resize', () => {
 async function openEntry(e: Entry) {
   await flushNotes();
   state.current = e;
-  const m = metaFor(e.key);
+  const m = metaFor(e.id);
   m.lastOpened = Date.now();
   saveMeta(m);
-  kvSet('lastOpened', e.key);
+  kvSet('lastOpened', e.id);
   ui.empty.hidden = true;
   ui.docTitle.textContent = e.name;
   document.title = e.name + ' · 论文阅读器';
@@ -415,14 +440,14 @@ ui.find.addEventListener('keydown', (ev) => {
 });
 ui.status.onchange = () => {
   if (!state.current) return;
-  const m = metaFor(state.current.key);
+  const m = metaFor(state.current.id);
   m.status = ui.status.value as Status;
   saveMeta(m);
   renderList();
 };
 ui.star.onclick = () => {
   if (!state.current) return;
-  const m = metaFor(state.current.key);
+  const m = metaFor(state.current.id);
   m.star = !m.star;
   ui.star.textContent = m.star ? '★' : '☆';
   saveMeta(m);
@@ -438,9 +463,9 @@ async function loadNotes(e: Entry, m: PaperMeta) {
   ui.notes.disabled = false;
   ui.notes.value = m.notes;
   ui.saveState.textContent = '';
-  ui.notesFoot.textContent = state.canWrite ? `同步到 .paper-notes/ 文件夹` : '保存在这个浏览器里';
-  if (state.root) {
-    const f = await readNotesFile(state.root, e.key);
+  ui.notesFoot.textContent = e.root && e.canWrite ? `同步到 .paper-notes/ 文件夹` : '保存在这个浏览器里';
+  if (e.root) {
+    const f = await readNotesFile(e.root, e.key);
     if (f && state.current === e && f.modified > m.notesUpdated && f.text !== m.notes) {
       ui.notes.value = f.text;
       m.notes = f.text;
@@ -455,13 +480,13 @@ async function flushNotes() {
   if (!notesDirty || !state.current) return;
   notesDirty = false;
   const e = state.current;
-  const m = metaFor(e.key);
+  const m = metaFor(e.id);
   m.notes = ui.notes.value;
   m.notesUpdated = Date.now();
   saveMeta(m);
-  if (state.root && state.canWrite) {
+  if (e.root && e.canWrite) {
     try {
-      await writeNotesFile(state.root, e.key, m.notes);
+      await writeNotesFile(e.root, e.key, m.notes);
     } catch {
       ui.saveState.textContent = '写入文件失败，已存在浏览器';
       return;
@@ -527,7 +552,7 @@ document.addEventListener('keydown', (ev) => {
 function openLooseFile(f: File) {
   const e = entriesFromFiles([f] as unknown as FileList)[0];
   if (!e) return toast('只支持 PDF / Markdown / TXT');
-  if (!state.entries.some((x) => x.key === e.key)) state.entries.push(e);
+  if (!state.entries.some((x) => x.id === e.id)) state.entries.push(e);
   openEntry(e);
 }
 

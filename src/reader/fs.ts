@@ -2,7 +2,10 @@
 // Other browsers: plain <input type="file"> (files are only kept for this session).
 
 export interface Entry {
+  id: string; // storage key: "<source id>:<relative path>", unique across folders
   key: string; // relative path, e.g. "LLM/attention.pdf"
+  root: FileSystemDirectoryHandle | null; // folder that owns this file (null for loose files)
+  canWrite?: boolean; // notes can be written back into root/.paper-notes/
   name: string;
   dir: string;
   kind: 'pdf' | 'text';
@@ -52,7 +55,7 @@ export async function permission(handle: FileSystemDirectoryHandle, ask: boolean
   return 'none';
 }
 
-export async function scanFolder(root: FileSystemDirectoryHandle, onProgress?: (n: number) => void): Promise<Entry[]> {
+export async function scanFolder(root: FileSystemDirectoryHandle, rootId: string, onProgress?: (n: number) => void): Promise<Entry[]> {
   const out: Entry[] = [];
   async function walk(dir: FileSystemDirectoryHandle, prefix: string, depth: number) {
     if (depth > 8) return;
@@ -66,7 +69,9 @@ export async function scanFolder(root: FileSystemDirectoryHandle, onProgress?: (
         const fh = h as FileSystemFileHandle;
         const f = await fh.getFile();
         out.push({
+          id: `${rootId}:${prefix}${h.name}`,
           key: prefix + h.name,
+          root,
           name: h.name,
           dir: prefix.replace(/\/$/, ''),
           kind,
@@ -92,7 +97,10 @@ export function entriesFromFiles(files: FileList): Entry[] {
     if (parts.length > 1) parts.shift(); // drop the picked folder's own name
     const key = parts.join('/');
     out.push({
+      // Loose files have no stable folder, so identify them by name + size.
+      id: `file:${f.size}:${key}`,
       key,
+      root: null,
       name: f.name,
       dir: parts.slice(0, -1).join('/'),
       kind,
@@ -104,8 +112,10 @@ export function entriesFromFiles(files: FileList): Entry[] {
   return out;
 }
 
-function notesFileName(key: string): string {
-  return key.replace(/[\\/]/g, ' ⁄ ').replace(/\.(pdf|md|markdown|txt)$/i, '') + '.md';
+// Reversible, collision-free mapping: only "%" and "/" are escaped, the extension is kept.
+// "LLM/attention.pdf" -> "LLM%2Fattention.pdf.md"
+export function notesFileName(key: string): string {
+  return key.replace(/%/g, '%25').replace(/\//g, '%2F') + '.md';
 }
 
 export async function readNotesFile(root: FileSystemDirectoryHandle, key: string): Promise<{ text: string; modified: number } | null> {
