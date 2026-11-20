@@ -1,0 +1,21 @@
+{
+  "name": "论文阅读器 · bit10086",
+  "short_name": "论文阅读器",
+  "description": "在浏览器里阅读本地论文文件夹，文件不会上传。",
+  "id": "/reader/",
+  "start_url": "/reader/",
+  "scope": "/reader/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#f4f3ef",
+  "theme_color": "#f4f3ef",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "/reader/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/reader/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/mark.svg", "sizes": "any", "type": "image/svg+xml" }
+  ],
+  "file_handlers": [
+    { "action": "/reader/", "accept": { "application/pdf": [".pdf"] } }
+  ]
+}

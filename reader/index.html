@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f4f3ef" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="在浏览器里阅读本地论文文件夹，文件不会上传。" />
+  <title>论文阅读器 · bit10086</title>
+  <link rel="icon" type="image/svg+xml" href="/mark.svg" />
+  <link rel="manifest" href="/reader/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/reader/icon-192.png" />
+</head>
+<body>
+  <div class="app" id="app">
+    <aside class="library" id="library">
+      <header class="lib-head">
+        <a class="brand" href="/" title="回到主页"><img src="/mark.svg" alt="" width="22" height="22" /><span>论文阅读器</span></a>
+        <button class="icon-btn" id="theme-btn" title="切换深色 / 浅色">☾</button>
+      </header>
+      <div class="folder-bar">
+        <button class="btn primary" id="open-folder">打开论文文件夹</button>
+        <button class="btn" id="reconnect" hidden>重新连接「<span id="reconnect-name"></span>」</button>
+        <label class="btn ghost" id="pick-files-label" title="浏览器不支持直接打开文件夹时使用">
+          选择文件<input type="file" id="pick-files" accept="application/pdf,.pdf,.md,.txt" multiple hidden />
+        </label>
+      </div>
+      <div class="folder-name" id="folder-name"></div>
+      <input class="search" id="search" type="search" placeholder="搜索文件名  ( / )" autocomplete="off" />
+      <nav class="filters" id="filters">
+        <button data-f="all" class="on">全部</button>
+        <button data-f="unread">未读</button>
+        <button data-f="reading">在读</button>
+        <button data-f="done">已读</button>
+        <button data-f="star">★</button>
+      </nav>
+      <ul class="files" id="files"></ul>
+      <footer class="lib-foot" id="lib-foot">文件只在你的电脑上读取，不会上传。</footer>
+    </aside>
+
+    <main class="viewer-wrap" id="viewer-wrap">
+      <div class="toolbar" id="toolbar">
+        <button class="icon-btn" id="toggle-lib" title="收起 / 展开文献列表 ( [ )">☰</button>
+        <div class="doc-title" id="doc-title">还没有打开论文</div>
+        <div class="tools">
+          <input class="find" id="find" type="search" placeholder="文中查找" />
+          <span class="sep"></span>
+          <button class="icon-btn" id="zoom-out" title="缩小 ( - )">−</button>
+          <button class="btn small" id="zoom-label" title="适应宽度">100%</button>
+          <button class="icon-btn" id="zoom-in" title="放大 ( + )">+</button>
+          <span class="sep"></span>
+          <input class="page-input" id="page-input" inputmode="numeric" aria-label="页码" />
+          <span class="page-total" id="page-total">/ 0</span>
+          <span class="sep"></span>
+          <select id="status" title="阅读状态">
+            <option value="unread">未读</option>
+            <option value="reading">在读</option>
+            <option value="done">已读</option>
+          </select>
+          <button class="icon-btn" id="star" title="收藏">☆</button>
+          <button class="icon-btn" id="toggle-notes" title="收起 / 展开笔记 ( ] )">✎</button>
+        </div>
+      </div>
+      <div class="viewer-host" id="viewer-host">
+        <div id="viewerContainer" class="viewer-container" tabindex="0">
+          <div id="viewer" class="pdfViewer"></div>
+        </div>
+        <div class="text-view" id="text-view" hidden></div>
+        <div class="empty" id="empty">
+          <h1>把论文文件夹放进来</h1>
+          <p>点击左上角「打开论文文件夹」，选择你存 PDF 的文件夹。之后每次打开这个页面，点一下「重新连接」就能接着读。</p>
+          <ul>
+            <li>PDF 在本机浏览器里渲染，不经过任何服务器</li>
+            <li>记住每篇论文读到第几页、阅读状态和收藏</li>
+            <li>笔记自动保存，并写回文件夹里的 <code>.paper-notes/</code></li>
+            <li>可以「安装」成独立窗口，常驻在桌面上；也可以直接把 PDF 拖进来</li>
+          </ul>
+          <button class="btn" id="install-btn" hidden>安装为桌面应用</button>
+        </div>
+      </div>
+    </main>
+
+    <aside class="notes" id="notes">
+      <header class="notes-head">
+        <span>笔记</span>
+        <span class="save-state" id="save-state"></span>
+      </header>
+      <button class="btn small" id="quote-btn" title="把 PDF 中选中的文字插入笔记 ( Q )">引用选中文字</button>
+      <textarea id="notes-text" placeholder="在这里记笔记，支持 Markdown。&#10;&#10;选中 PDF 里的文字后点「引用选中文字」，会带上页码插进来。" disabled></textarea>
+      <footer class="notes-foot" id="notes-foot"></footer>
+    </aside>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/src/reader/main.ts"></script>
+</body>
+</html>

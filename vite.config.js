@@ -7,6 +7,7 @@ export default defineConfig({
       input: {
         home: fileURLToPath(new URL('./index.html', import.meta.url)),
         dashboard: fileURLToPath(new URL('./dashboard/index.html', import.meta.url)),
+        reader: fileURLToPath(new URL('./reader/index.html', import.meta.url)),
       },
     },
   },
